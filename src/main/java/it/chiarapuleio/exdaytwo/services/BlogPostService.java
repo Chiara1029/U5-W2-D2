@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class BlogPostService {
@@ -16,6 +17,8 @@ public class BlogPostService {
     }
 
     public BlogPost savePost(BlogPost newPost) {
+        Random rnd = new Random();
+        newPost.setId(rnd.nextInt(1, 10));
         this.blogPosts.add(newPost);
         return newPost;
     }
@@ -33,15 +36,17 @@ public class BlogPostService {
     public BlogPost findByIdAndUpdate(int id, BlogPost newPost) {
         BlogPost found = null;
         for (BlogPost blogPost : this.blogPosts) {
-            if (newPost.getId() == id) {
-                found = newPost;
+            if (blogPost.getId() == id) {
+                found = blogPost;
                 found.setCategory(newPost.getCategory());
                 found.setTitle(newPost.getTitle());
+                found.setCover(newPost.getCover());
                 found.setContent(newPost.getContent());
                 found.setReadingTime(newPost.getReadingTime());
             }
         }
-        return found;
+        if (found == null) throw new RuntimeException();
+        else return found;
     }
 
     public void findByIdAndDelete(int id) {
